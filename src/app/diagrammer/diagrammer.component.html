@@ -1,0 +1,89 @@
+<div class="bg-image p-4 flex flex-row gap-4 bg-slate-600 h-screen w-screen relative">
+  <!-- OPCIONES DE FUNCIONALIDAD -->
+  <div class="w-[22%] f-[100%]  flex flex-col gap-4">
+    <div class="w-[100%] h-[30%]  rounded-xl border-4 bg-gray-800 border-white text-white flex flex-col p-4 gap-3"
+      id="stencil-holder">
+      <!-- ELELEMNTOS DE PIZARRA -->
+      <span class="text-2xl font-bold ">Elementos Pizarra</span>
+      <div class="bg-green-600 w-[100%] h-[100%]" id="stencilBase">
+        <div #canvasStencil class="rounded-lg "></div>
+      </div>
+    </div>
+    <!-- OPCIONES ADICIONALES Y CODIGO (CONVERSION DE DIAGRAMA A CODIGO) -->
+    <div class="w-[100%] h-[70%] bg-gray-800 rounded-xl border-4 border-white p-4 overflow-auto">
+      <div class="flex flex-row text-white text-2xl gap-2 justify-center mb-4">
+        <button class="border-4 border-white rounded-lg p-2" (click)="onChangeViewFile()"
+          (dblclick)="serviceDiagrammer.onChangeviewActionsFile(false)">Archivo</button>
+        <button class="border-4 border-white rounded-lg p-2" (click)="onChangeViewDev()"
+          (dblclick)="serviceDiagrammer.onChangeviewActionsDev(false)">Developer</button>
+        <button class="border-4 border-white rounded-lg p-2" (click)="salirSala()">Salir</button>
+      </div>
+      <div
+        class="w-[100%] h-[20%] border-4 border-white rounded-lg  flex items-center justify-items-center justify-center">
+        <span style="white-space: pre-wrap"
+          class="text-xl font-bold text-white text-center">{{textoGraphToCodigo()}}</span>
+        <!-- <textarea name="" id="" class="w-full h-full" readonly style="resize: none;" >
+        {{textoGraphToCodigo()}}
+        </textarea> -->
+      </div>
+      <div class="w-[100%] h-[69%]  flex flex-col py-4 gap-3">
+        <span class="text-white text-2xl font-bold ">COLABORADORES :</span>
+        <div class="flex flex-col gap-4 w-[100%] h-[100%] border-4 border-white rounded-lg  text-white p-4">
+          <div *ngFor="let asistente of colaboradoresSala().asistentes" class="flex flex-row gap-2 items-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/7816/7816916.png" alt="" class="h-10 w-10 rounded-lg">
+            <span class="font-bold text-2xl">{{ asistente.email }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIZARRA -->
+  <div class="p-4 m-10 flex justify-center items-center w-[85%] rounded-2xl" id="canvasPrimary">
+    <div #canvas class="rounded-lg"></div>
+  </div>
+
+  <!-- OPCIONES DE EXPORTAR E IMPORTAR -->
+  <div [ngClass]="{ 'hidden': !serviceDiagrammer.getViewActionsFile()}"
+    class="flex flex-col gap-3 p-2 absolute bg-gray-800  top-[41%] left-[4%] text-white rounded-lg border-4 border-white shadow-2xl">
+    <div (click)="fileInput.click()"
+      class="custom-file-upload border-4 border-white rounded-lg p-2 hover:bg-gray-600 inline-block relative cursor-pointer">
+      <input type="file" accept=".json" (change)="importarContent($event)" class="hidden" #fileInput> <span
+        class="text-white">Importar</span>
+    </div>
+    <button class="border-4 border-white rounded-lg p-2 hover:bg-gray-600" (click)="exportarContent()">Exportar</button>
+  </div>
+  <!-- OPCIONES DE DESARROLLADORES -->
+  <div [ngClass]="{ 'hidden': !serviceDiagrammer.getViewActionsDev()}"
+    class="flex flex-col gap-3 p-2 absolute bg-gray-800 top-[41%] left-[10%] text-white rounded-lg border-4 border-white shadow-2xl">
+    <button class="border-4 border-white rounded-lg p-2 hover:bg-gray-600" (click)="getGraphToCodigo('c++')">
+      C++
+    </button>
+    <button class="border-4 border-white rounded-lg p-2 hover:bg-gray-600 "
+      (click)="getGraphToCodigo('java')">Java</button>
+    <button class="border-4 border-white rounded-lg p-2 hover:bg-gray-600 "
+      (click)="getGraphToCodigo('dart')">Dart</button>
+  </div>
+
+  <!-- MENSAJE DE COMPARTIR SALA-->
+  <div [ngClass]="{ 'hidden': !banderaShare()}"
+    class="shadow-2xl transition absolute top-[74%] left-[79%] max-h-min w-[20%] border-4 border-white rounded-lg bg-gray-800 text-white p-4 gap-1 flex flex-col">
+    <div class="flex flex-row justify-between items-center"><span class="text-2xl font-bold">La reunion esta
+        lista</span>
+      <div (click)="onChangeViewShare(false)">
+        <i class="fa-solid fa-xmark fa-2x "></i>
+      </div>
+    </div>
+    <span class="text-white opacity-80">Comparte este enlace de reunion con las personas que quieres que asistan.</span>
+    <div class="my-2 bg-slate-400 text-2xl flex justify-between items-center p-2 rounded-lg">
+      <input type="text" [value]="datosPage.url" class="w-[90%] bg-transparent" readonly disabled>
+      <div (click)="copyToClipboard()" class="hover:bg-slate-600 p-1">
+        <i class="fa-regular fa-copy"></i>
+      </div>
+    </div>
+    <div class="flex flex-col  text-white opacity-80 ">
+      <span>Te has unido como :</span>
+      <span class="">{{serviceHome.usuarioAuth().email}}</span>
+    </div>
+  </div>
+</div>
